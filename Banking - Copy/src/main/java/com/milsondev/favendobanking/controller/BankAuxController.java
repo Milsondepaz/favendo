@@ -4,7 +4,7 @@
  */
 package com.milsondev.favendobanking.controller;
 
-import com.milsondev.favendobanking.domain.model.BankAccount;
+import com.milsondev.favendobanking.domain.model.Account;
 import com.milsondev.favendobanking.domain.repository.BankAccountRepository;
 import com.milsondev.favendobanking.exceptionhandler.BusinessException;
 import java.util.List;
@@ -39,34 +39,34 @@ public class BankAuxController {
    
     @Operation(summary = "Get all accounts", responses = {
         @ApiResponse(description = "Get all accounts success", responseCode = "200",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = BankAccount.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class)))
     })
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
-    public List<BankAccount> getAllAccounts() {
+    public List<Account> getAllAccounts() {
         return bankAccountRepository.findAll();
     }
 
     @Operation(summary = "Get an account", responses = {
         @ApiResponse(description = "Get account success", responseCode = "200",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = BankAccount.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class)))
     })
     @RequestMapping(value = "/accounts/{id}", method = RequestMethod.GET)
-    public ResponseEntity<BankAccount> getAccount(@PathVariable Long id) {
+    public ResponseEntity<Account> getAccount(@PathVariable Long id) {
         if (!bankAccountRepository.existsById(id)) {
             throw new BusinessException("Account not found");
         }
-        Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(id);
-        BankAccount bankAccount = optionalBankAccount.get();
+        Optional<Account> optionalBankAccount = bankAccountRepository.findById(id);
+        Account bankAccount = optionalBankAccount.get();
         return ResponseEntity.ok(bankAccount);
     }
 
     @Operation(summary = "Create, add or open a new an account", responses = {
         @ApiResponse(description = "create a new account success", responseCode = "200",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = BankAccount.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class)))
     })
     @RequestMapping(value = "/accounts/new", method = RequestMethod.POST)
-    public BankAccount createNewAccount(@Valid @RequestBody BankAccount bankAccount) {
-        BankAccount existingAccount = bankAccountRepository.findByAccountOwner(bankAccount.getAccountOwner());
+    public Account createNewAccount(@Valid @RequestBody Account bankAccount) {
+        Account existingAccount = bankAccountRepository.findByAccountOwner(bankAccount.getAccountOwner());
         if (existingAccount != null && !existingAccount.equals(bankAccount)) {
             throw new BusinessException("There is already a customer registered with this name");
         }
@@ -77,10 +77,10 @@ public class BankAuxController {
 
     @Operation(summary = "Update an account", responses = {
         @ApiResponse(description = "Update account success", responseCode = "200",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = BankAccount.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class)))
     })
     @RequestMapping(value = "/accounts/update/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<BankAccount> update(@Valid @PathVariable Long id, @RequestBody BankAccount bankAccount) {
+    public ResponseEntity<Account> update(@Valid @PathVariable Long id, @RequestBody Account bankAccount) {
         
         if (!bankAccountRepository.existsById(id)) {
             throw new BusinessException("Account not found");
@@ -91,7 +91,7 @@ public class BankAuxController {
             bankAccount.setAuxLimit( bankAccount.getRestrictedLimit()); 
         }
         
-        BankAccount existingAccount = bankAccountRepository.findByAccountOwner(bankAccount.getAccountOwner());
+        Account existingAccount = bankAccountRepository.findByAccountOwner(bankAccount.getAccountOwner());
         if (existingAccount != null && !existingAccount.equals(bankAccount)) {
             throw new BusinessException("There is already a customer registered with this name");
         }
@@ -103,7 +103,7 @@ public class BankAuxController {
 
     @Operation(summary = "Delete an account", responses = {
         @ApiResponse(description = "Delete account success", responseCode = "200",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = BankAccount.class))),
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
         @ApiResponse(description = "Account not found", responseCode = "409", content = @Content)
     })
     @RequestMapping(value = "/accounts/delete/{id}", method = RequestMethod.DELETE)

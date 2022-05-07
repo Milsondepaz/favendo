@@ -32,7 +32,7 @@ import javax.validation.constraints.Size;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankAccount implements Serializable {
+public abstract class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -113,7 +113,7 @@ public class BankAccount implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BankAccount other = (BankAccount) obj;
+        final Account other = (Account) obj;
         return Objects.equals(this.id, other.id);
     }
 }

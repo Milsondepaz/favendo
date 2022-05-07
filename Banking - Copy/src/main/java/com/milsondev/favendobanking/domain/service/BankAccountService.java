@@ -6,7 +6,7 @@ package com.milsondev.favendobanking.domain.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.milsondev.favendobanking.exceptionhandler.BusinessException;
-import com.milsondev.favendobanking.domain.model.BankAccount;
+import com.milsondev.favendobanking.domain.model.Account;
 import com.milsondev.favendobanking.domain.repository.BankAccountRepository;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -66,19 +66,19 @@ public class BankAccountService {
         private BigDecimal interest_rate;
     }
 
-    public BankAccount salvar(BankAccount bankAccount) {
-        BankAccount existingAccount = bankAccountRepository.findByAccountOwner(bankAccount.getAccountOwner());
+    public Account salvar(Account bankAccount) {
+        Account existingAccount = bankAccountRepository.findByAccountOwner(bankAccount.getAccountOwner());
         if (existingAccount != null && !existingAccount.equals(bankAccount)) {
             throw new BusinessException("There is already a customer registered with this name");
         }
         return bankAccountRepository.save(bankAccount);
     }
 
-    public BankAccount balance(Long id) {
-        Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(id);
-        BankAccount bankAccount = optionalBankAccount.get();
+    public Account balance(Long id) {
+        Optional<Account> optionalBankAccount = bankAccountRepository.findById(id);
+        Account bankAccount = optionalBankAccount.get();
 
-        BankAccount nbk = new BankAccount();
+        Account nbk = new Account();
 
         nbk.setBalance(bankAccount.getBalance());
         nbk.setAccountOwner(bankAccount.getAccountOwner());
@@ -87,8 +87,8 @@ public class BankAccountService {
     }
 
     public InfoWithdraw withdrawMoney(InfoWithdraw withdraw) {
-        Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(withdraw.getId());
-        BankAccount bankAccount = optionalBankAccount.get();
+        Optional<Account> optionalBankAccount = bankAccountRepository.findById(withdraw.getId());
+        Account bankAccount = optionalBankAccount.get();
         if (withdraw.getAmount().intValue() < 0) {
             throw new BusinessException("Invalid operation.");
         }
@@ -110,8 +110,8 @@ public class BankAccountService {
             throw new BusinessException("Invalid operation.");
         }
 
-        Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(t.getIdSource());
-        BankAccount sourceBankAccount = optionalBankAccount.get();
+        Optional<Account> optionalBankAccount = bankAccountRepository.findById(t.getIdSource());
+        Account sourceBankAccount = optionalBankAccount.get();
 
         if (!sourceBankAccount.checkMoneyAvailability2(t.getAmount())) {
             throw new BusinessException("You do not have enough balance or limit to complete this operation.");
@@ -119,7 +119,7 @@ public class BankAccountService {
 
         optionalBankAccount = bankAccountRepository.findById(t.getIdDestination());
 
-        BankAccount destinationBankAccount = optionalBankAccount.get();
+        Account destinationBankAccount = optionalBankAccount.get();
 
         destinationBankAccount.moneyReceived(t.getAmount());
 

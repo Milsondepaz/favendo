@@ -4,7 +4,7 @@
  */
 package com.milsondev.favendobanking.controller;
 
-import com.milsondev.favendobanking.domain.model.BankAccount;
+import com.milsondev.favendobanking.domain.model.Account;
 import com.milsondev.favendobanking.domain.service.BankAccountService;
 import com.milsondev.favendobanking.domain.repository.BankAccountRepository;
 import com.milsondev.favendobanking.domain.service.BankAccountService.InfoInterestRate;
@@ -50,7 +50,7 @@ public class BankController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
     })
     @RequestMapping(value = "/accounts/balance/{id}", method = RequestMethod.GET)
-    public ResponseEntity<BankAccount> getBalance(@PathVariable Long id) {
+    public ResponseEntity<Account> getBalance(@PathVariable Long id) {
         
         if (!bankAccountRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
